@@ -1,0 +1,12 @@
+[project]
+name = "oral-exams"
+version = "0.1.0"
+description = "On-device tutor orchestration stack for statistics & regression"
+authors = [{name = "OralExams Team"}]
+readme = "README.md"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "B", "UP"]
+
