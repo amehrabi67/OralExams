@@ -1,0 +1,74 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🧪 Test System",
+            "type": "python",
+            "request": "launch",
+            "program": "test_system.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "🚀 Interactive Mode",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["interactive"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "📝 Run Question (Simulation)",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["run", "r2_interpretation_01", "--simulation"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "📋 List Questions",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["list"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "➕ Add Question",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["add"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "🔍 Search Questions",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["search", "--topic", "regression"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "⚙️ Show Config",
+            "type": "python",
+            "request": "launch",
+            "program": "tutoring_cli.py",
+            "args": ["config", "--show"],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        }
+    ]
+}
