@@ -1,0 +1,20 @@
+[
+  {
+    "id": "rag#12",
+    "title": "Interpreting R-squared",
+    "content": "R-squared describes the proportion of variance in the response that is explained by the predictors in a linear regression model. An R-squared of 0.64 means 64 percent of the variance in exam score is explained by hours studied. It does not imply that studying causes the score but that the model captures that share of variance.",
+    "checkpoints": ["variance_explained", "no_causality"]
+  },
+  {
+    "id": "rag#5",
+    "title": "Simple Linear Regression Model Statement",
+    "content": "A simple linear regression can be written as y = beta0 + beta1 x + epsilon, where beta1 describes the change in the response per one unit increase in the predictor. The intercept beta0 is the expected value of the response when the predictor is zero.",
+    "checkpoints": ["model_equation", "slope_units", "intercept_context"]
+  },
+  {
+    "id": "rag#7",
+    "title": "Assumptions for Inference",
+    "content": "Valid inference for a simple linear regression requires approximately linear relationships, independent errors, and constant variance around the line. Residuals should be approximately normal if we want to build confidence intervals or hypothesis tests.",
+    "checkpoints": ["assumptions"]
+  }
+]

@@ -70,16 +70,20 @@ class Orchestrator:
 
         self.state = OrchestratorState.CAPTURE
         vision_obs: Optional[VisionObservation] = self.vision.observe(bundle)
+        bundle.vision = vision_obs
         grounding_obs: Optional[GroundingObservation] = None
 
         if vision_obs and vision_obs.cv_conf >= self.config.min_cv_conf:
             grounding_obs = self.grounding.ground(bundle, vision_obs)
             if grounding_obs and grounding_obs.vlm_conf < self.config.min_vlm_conf:
                 grounding_obs = None
+        bundle.grounding = grounding_obs
 
         self.state = OrchestratorState.RETRIEVE
         speech_obs: SpeechObservation = self.speech.transcribe(bundle)
+        bundle.speech = speech_obs
         retrieval_result = self.retrieval.retrieve(bundle, speech_obs, grounding_obs)
+        bundle.retrieval = retrieval_result
 
         if retrieval_result and retrieval_result.rag_cov < self.config.min_rag_cov:
             next_action = self.coaching.handle_low_coverage(bundle, retrieval_result)

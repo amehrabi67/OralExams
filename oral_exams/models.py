@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import List, Optional, Sequence
+from pathlib import Path
+from typing import Any, List, Optional, Sequence
 
 
 class OrchestratorState(Enum):
@@ -124,10 +125,13 @@ class ItemContext:
 @dataclass
 class TurnBundle:
     item: ItemContext
-    speech: SpeechObservation
-    vision: Optional[VisionObservation]
-    grounding: Optional[GroundingObservation]
-    retrieval: Optional[RetrievalResult]
+    raw_video_frame: Any | None = None
+    raw_video_path: Optional[Path] = None
+    raw_audio_path: Optional[Path] = None
+    speech: Optional[SpeechObservation] = None
+    vision: Optional[VisionObservation] = None
+    grounding: Optional[GroundingObservation] = None
+    retrieval: Optional[RetrievalResult] = None
 
 
 @dataclass
