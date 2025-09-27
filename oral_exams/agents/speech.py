@@ -10,7 +10,6 @@ from typing import Protocol
 import numpy as np
 import requests
 import soundfile as sf
-from vosk import KaldiRecognizer, Model
 
 from ..models import SpeechObservation, TurnBundle
 
@@ -29,6 +28,16 @@ class VoskSpeechAgent:
         cache_dir: str | Path | None = None,
         hf_token: str | None = None,
     ) -> None:
+        # Import vosk lazily so the module can be imported in environments
+        # where vosk isn't installed. If vosk is missing, constructing this
+        # agent will raise ImportError.
+        try:
+            from vosk import Model  # type: ignore
+        except Exception as exc:  # pragma: no cover - defensive
+            raise ImportError(
+                "vosk is required for VoskSpeechAgent but is not installed"
+            ) from exc
+
         model_path = _ensure_vosk_model(model_name, cache_dir, hf_token)
         self._model = Model(str(model_path))
 
@@ -44,6 +53,13 @@ class VoskSpeechAgent:
             data = np.clip(data, -1.0, 1.0)
             data = (data * 32767).astype(np.int16)
         sf.write(audio_path, data, sr, subtype="PCM_16")  # ensure mono PCM16
+        # Import KaldiRecognizer lazily to avoid module-level import errors
+        try:
+            from vosk import KaldiRecognizer  # type: ignore
+        except Exception as exc:  # pragma: no cover - defensive
+            raise ImportError(
+                "vosk is required for VoskSpeechAgent but is not installed"
+            ) from exc
 
         recognizer = KaldiRecognizer(self._model, sr)
         recognizer.SetWords(True)
@@ -91,14 +107,25 @@ def _ensure_vosk_model(
 
     zip_path = base_dir / f"{model_name}.zip"
     if not zip_path.exists():
-        url = f"https://huggingface.co/alphacep/{model_name}/resolve/main/{model_name}.zip"
-        headers = {"Authorization": f"Bearer {hf_token}"} if hf_token else {}
-        with requests.get(url, headers=headers, stream=True, timeout=300) as response:
-            response.raise_for_status()
-            with open(zip_path, "wb") as handle:
-                for chunk in response.iter_content(chunk_size=1_048_576):
-                    if chunk:
-                        handle.write(chunk)
+        # Try official Vosk website first
+        url = f"https://alphacephei.com/vosk/models/{model_name}.zip"
+        try:
+            with requests.get(url, stream=True, timeout=300) as response:
+                response.raise_for_status()
+                with open(zip_path, "wb") as handle:
+                    for chunk in response.iter_content(chunk_size=1_048_576):
+                        if chunk:
+                            handle.write(chunk)
+        except requests.exceptions.RequestException:
+            # Fallback to Hugging Face
+            url = f"https://huggingface.co/alphacep/{model_name}/resolve/main/{model_name}.zip"
+            headers = {"Authorization": f"Bearer {hf_token}"} if hf_token else {}
+            with requests.get(url, headers=headers, stream=True, timeout=300) as response:
+                response.raise_for_status()
+                with open(zip_path, "wb") as handle:
+                    for chunk in response.iter_content(chunk_size=1_048_576):
+                        if chunk:
+                            handle.write(chunk)
 
     with zipfile.ZipFile(zip_path, "r") as archive:
         archive.extractall(base_dir)
