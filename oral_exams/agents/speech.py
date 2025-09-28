@@ -1,7 +1,6 @@
 """Speech transcription agent wrapper."""
 from __future__ import annotations
 
-
 import json
 import zipfile
 from pathlib import Path
@@ -70,10 +69,24 @@ class VoskSpeechAgent:
 
         with sf.SoundFile(audio_path, "rb") as audio_file:
             while True:
+                # buffer_read may return a buffer-like object; ensure we pass
+                # a raw bytes object to Vosk's CFFI interface (AcceptWaveform)
                 chunk = audio_file.buffer_read(4000, dtype="int16")
                 if not chunk:
                     break
-                if recognizer.AcceptWaveform(chunk):
+                # Normalize to bytes to avoid cffi TypeError: initializer for ctype 'char *' must be a cdata pointer
+                if not isinstance(chunk, (bytes, bytearray)):
+                    try:
+                        chunk_bytes = bytes(chunk)
+                    except Exception:
+                        # Fallback: convert via numpy if it's array-like
+                        import numpy as _np
+
+                        chunk_bytes = _np.asarray(chunk).tobytes()
+                else:
+                    chunk_bytes = bytes(chunk)
+
+                if recognizer.AcceptWaveform(chunk_bytes):
                     result_blob = recognizer.Result()
                     confidences.extend(_word_confidences(result_blob))
                     segments.append(_extract_text(result_blob))
