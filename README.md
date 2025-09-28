@@ -1,6 +1,59 @@
 # Enhanced On-Device Tutoring System for Regression Topics
 
 A comprehensive, user-friendly tutoring system that allows educators to create custom questions with expected responses and provides intelligent feedback to students through multimodal analysis.
+🎯 Overall Goal of OralExams
+
+The project is a prototype of an on-device tutoring system for statistics and regression that fuses two worlds:
+
+Body Gesture & Environment Sensing (behavioral layer)
+
+Using OpenCV to capture facial orientation, gaze direction, hand/pen movement, and whether the learner is writing or pointing at the board/paper.
+
+Optionally using OCR (RapidOCR) or a visual grounding model to extract equations or fragments written on the paper/whiteboard.
+
+Purpose: provide context signals — e.g., “student is re-reading but not writing,” “board shows R² = 0.64,” “pen is active.”
+
+Knowledge Analysis (cognitive/content layer)
+
+Using Vosk for speech recognition to transcribe the learner’s spoken answer.
+
+Running retrieval-augmented grading: searching a curated knowledge base for the correct interpretation of concepts (like regression assumptions or R² meaning).
+
+Applying a scoring agent that checks student responses against a rubric, identifies misconceptions (e.g., “R² implies causation”), and assigns a content score.
+
+Passing results to the coaching agent, which delivers one actionable piece of feedback (a guided question, a short explanation, or a worked example).
+
+🧩 Why combine gestures + knowledge?
+
+Gestures and body activity give a signal of engagement and process:
+
+If the student is writing → they’re trying to compute.
+
+If they keep pointing back to the same equation without answering → possible confusion.
+
+If they’re re-reading and not progressing → pacing adjustment needed.
+
+Knowledge analysis ensures the tutor doesn’t just guess from gestures but evaluates what the student actually said. The RAG + rubric system keeps feedback grounded, prevents hallucination, and ensures the tutor’s response stays aligned with the curriculum.
+
+Together, these signals let the orchestrator adapt how to respond:
+
+Confusion in gestures + weak transcript → slow down, prerequisite reminder.
+
+Clear gestures + partial answer → targeted micro-hint.
+
+Confident gestures + good answer → confirm correctness, maybe advance difficulty.
+
+📌 Core Mission
+
+To create an AI tutor that listens, watches, and grades in real time — but:
+
+Runs fully on-device (privacy, no cloud).
+
+Uses lightweight free models (OpenCV, Vosk, RapidOCR, TF-IDF retrieval).
+
+Provides trustworthy, rubric-based coaching in statistics/regression.
+
+Ultimately: make oral exams and live tutoring more scalable, by letting a machine evaluate both what students say and how they engage with the task physically.
 
 ## 🚀 Key Features
 
