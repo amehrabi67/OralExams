@@ -51,6 +51,27 @@ export HF_TOKEN="your_hugging_face_token_here"
 ## 🚀 Quick Start
 
 ### 1. Interactive Mode
+Install Missing Dependencies
+subStep 1: Install OpenCV and Other Dependencies
+source .venv/bin/activate
+pip install opencv-python numpy scikit-learn sounddevice soundfile requests
+subStep 2: Install Vosk (Optional)
+pip install vosk==0.3.44
+subStep 3: Test the System
+python examples/enhanced_simulated_turn.py --list-questions
+Run these commands in order:
+# 1. Activate virtual environment
+source .venv/bin/activate
+
+# 2. Install all dependencies
+pip install opencv-python numpy scikit-learn sounddevice soundfile requests vosk==0.3.44
+
+# 3. Install the package in editable mode
+pip install -e . --no-deps
+
+# 4. Test the system
+python examples/enhanced_simulated_turn.py --list-questions
+
 ```bash
 python tutoring_cli.py
 ```
